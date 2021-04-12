@@ -1,27 +1,24 @@
-import numpy as np
+# Decodificador
 
-TAM_COD = 7
-H = np.array([[1, 0, 1], [1, 1, 0], [1, 1, 1], [0, 1, 1], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
-
-
-class DecodificadorHamming:
-    def __init__(self, recebida):
+class Decodificador:
+    def __init__(self, recebida, H):
+        self.H = H
         self.recebida = recebida
         self.estimada = []
         self.erro = []
 
     def calcular_erro(self):
-        s = np.dot(np.array(self.recebida), H)
+        s = np.dot(np.array(self.recebida), self.H)
         for i in range(len(s)):
             s[i] = s[i] % 2
 
-        if np.array_equal(np.array([0,0,0]),s):
-            return np.zeros((TAM_COD,), dtype=int)
+        if np.array_equal(np.array([0, 0, 0]), s):
+            return np.zeros((len(self.recebida),), dtype=int)
         else:
             e = []
 
-            for i in range(TAM_COD):
-                if np.array_equal(H[i],s):
+            for i in range(len(self.recebida)):
+                if np.array_equal(self.H[i], s):
 
                     e.append(1)
                 else:
@@ -29,15 +26,10 @@ class DecodificadorHamming:
 
             return e
 
-
-    def get_erro(self):
-        return self.erro
-
     def calcular_estimada(self):
         e = self.calcular_erro()
-        for i in range(TAM_COD):
-            self.estimada.append((e[i]+self.recebida[i]) % 2)
-        return self.estimada
+        r = self.recebida
+        for i in range(len(e)):
+            self.estimada.append((e[i] + r[i]) % 2)
 
-    def get_estimada(self):
         return self.estimada

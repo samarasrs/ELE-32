@@ -1,5 +1,7 @@
 from random import choices
 
+#CanalBSC
+
 class CanalBSC:
     def __init__(self, entrada, probErro):
         self.entrada = entrada
@@ -19,4 +21,3 @@ class CanalBSC:
                 else:
                     self.saida.append(1)
         return self.saida
-
